@@ -1,5 +1,33 @@
 apply plugin: 'com.android.library'
+allprojects {
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
+}
+ext {
+    bintrayRepo = 'Maven'
+    bintrayName = 'CA'
 
+    publishedGroupId = 'com.xixicm.ca'
+    libraryName = 'CA'
+    artifact = 'ca'
+
+    libraryDescription = 'A simple clean architecture library'
+
+    siteUrl = 'https://github.com/enuoCM/CA'
+    gitUrl = 'https://github.com/enuoCM/CA.git'
+
+    libraryVersion = '0.0.1'
+
+    developerId = 'mc'
+    developerName = 'mc'
+    developerEmail = 'enuoCM@outlook.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -23,3 +51,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.0.0'
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
