@@ -1,2 +1,2 @@
 # CA
-A simple clean architecture liberary
+A simple clean architecture library
