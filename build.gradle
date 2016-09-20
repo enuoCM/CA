@@ -7,11 +7,13 @@ allprojects {
 }
 ext {
     bintrayRepo = 'Maven'
-    bintrayName = 'CA'
+    bintrayName = 'ca'
 
     publishedGroupId = 'com.xixicm.ca'
-    libraryName = 'CA'
+    libraryName = 'ca'
     artifact = 'ca'
+    //https://github.com/dcendents/android-maven-gradle-plugin/issues/9
+    project.archivesBaseName = 'ca'
 
     libraryDescription = 'A simple clean architecture library'
 
