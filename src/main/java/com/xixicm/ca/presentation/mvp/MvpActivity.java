@@ -18,6 +18,7 @@ package com.xixicm.ca.presentation.mvp;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import java.io.Serializable;
@@ -74,7 +75,9 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
     }
 
     /**
-     * Whether retain mPresenter by NonConfigurationInstance.
+     * Whether retain {@link #mPresenter} by NonConfigurationInstance.
+     * If return true, should override {@link #getPresenterFromNonConfigurationInstance()} to get {@link #mPresenter}.
+     * If return false,  {@link #mPresenter} will be destroyed when this activity {@link #onDestroy}
      *
      * @return default false
      */
@@ -83,10 +86,11 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
     }
 
     /**
-     * If isRetainPresenterByNonConfigurationInstance return true, should override this function to get mPresenter.
+     * If {@link #isRetainPresenterByNonConfigurationInstance} return true, should override this function to get {@link #mPresenter}.
      *
      * @return default null
      */
+    @Nullable
     protected P getPresenterFromNonConfigurationInstance() {
         return null;
     }
@@ -111,7 +115,7 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
     protected void onDestroy() {
         super.onDestroy();
         mPresenter.detachView();
-        if (!isRetainPresenterByNonConfigurationInstance()) {
+        if (!isRetainPresenterByNonConfigurationInstance() || null == getPresenterFromNonConfigurationInstance()) {
             mPresenter.onDestroy();
         } else if (isFinishing()) {
             mPresenter.onDestroy();
