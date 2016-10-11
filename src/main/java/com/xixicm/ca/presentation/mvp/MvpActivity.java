@@ -64,8 +64,8 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
             mPresenter.attachView((V) this, null);
         } else {
             M viewModel;
-            if (isRetainPresenterByNonConfigurationInstance() && mPresenter.getViewModel() != null) {
-                // if it's RetainPresenterByNonConfigurationInstance, no need to restore from the savedInstanceState
+            if (mPresenter.getViewModel() != null) {
+                // no need to restore from the savedInstanceState, if mPresenter.getViewModel() is not null.
                 viewModel = mPresenter.getViewModel();
             } else {
                 viewModel = (M) savedInstanceState.get(VIEW_MODE_KEY);

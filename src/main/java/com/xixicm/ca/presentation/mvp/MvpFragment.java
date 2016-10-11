@@ -65,11 +65,12 @@ public abstract class MvpFragment<M, V extends MvpView, P extends MvpPresenter<V
      */
     protected void onInitializePresenter(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-            mPresenter.attachView((V) this, null);
+            // For the back stack fragment, it's just destroy the view. So keep the viewModel here.
+            mPresenter.attachView((V) this, mPresenter.getViewModel());
         } else {
             M viewModel;
-            if (getRetainInstance() && mPresenter.getViewModel() != null) {
-                // if it's retainInstance, no need to restore from the savedInstanceState
+            if (mPresenter.getViewModel() != null) {
+                // no need to restore from the savedInstanceState, if mPresenter.getViewModel() is not null.
                 viewModel = mPresenter.getViewModel();
             } else {
                 viewModel = (M) savedInstanceState.get(VIEW_MODE_KEY);

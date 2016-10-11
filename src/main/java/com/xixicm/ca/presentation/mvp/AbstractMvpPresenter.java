@@ -25,13 +25,13 @@ import android.support.annotation.Nullable;
  */
 public abstract class AbstractMvpPresenter<V extends MvpView, M> implements MvpPresenter<V, M> {
     protected V mView;
-    private M mViewModel;
+    protected M mViewModel;
 
     @Override
     public void attachView(V mvpView, M viewMode) {
         mView = mvpView;
         if (viewMode == null) {
-            mViewModel = createViewMode();
+            mViewModel = createViewModel();
         } else {
             mViewModel = viewMode;
         }
@@ -43,7 +43,7 @@ public abstract class AbstractMvpPresenter<V extends MvpView, M> implements MvpP
      * @return
      */
     @Nullable
-    protected M createViewMode() {
+    protected M createViewModel() {
         return null;
     }
 
