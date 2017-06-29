@@ -131,7 +131,7 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
      * @return
      */
     @NonNull
-    protected P getPresenter() {
+    public P getPresenter() {
         if (mPresenter == null) {
             // when recreate the whole activity(restore the process), this function will be called from sub fragment
             // before creating the presenter on the onCreate of the activity. Usually getPresenterFromNonConfigurationInstance() is null,
