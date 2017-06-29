@@ -20,7 +20,7 @@ ext {
     siteUrl = 'https://github.com/enuoCM/CA'
     gitUrl = 'https://github.com/enuoCM/CA.git'
 
-    libraryVersion = '0.0.2'
+    libraryVersion = '0.0.3'
 
     developerId = 'mc'
     developerName = 'mc'
@@ -32,7 +32,7 @@ ext {
 }
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 8
