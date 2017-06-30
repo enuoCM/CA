@@ -15,8 +15,10 @@
  */
 package com.xixicm.ca.domain.usecase;
 
+import com.xixicm.ca.domain.handler.UseCaseHandler;
+
 /**
- * Use cases are the entry points to the domain layer.
+ * Callback type UseCase.
  * Please note: UseCase is not thread safe. When reusing UseCase,
  * should consider changed Request parameter and wrong call back on previous call back.
  * Best practice: 1. Always reset a new call back for a re-used UseCase
@@ -27,15 +29,30 @@ package com.xixicm.ca.domain.usecase;
  * @param <Error>    Data received Error.
  * @author mc
  */
-public interface UseCase<Request, Response, Error> extends Runnable {
+public interface UseCase<Request, Response, Error> extends Runnable, UC {
 
-    void setRequestValue(Request requestValue);
+    UseCase<Request, Response, Error> setRequestValue(Request requestValue);
 
     Request getRequestValue();
 
-    void setUseCaseCallback(UseCaseCallback<Response, Error> useCaseCallback);
+    UseCase<Request, Response, Error> setUseCaseCallback(UseCaseCallback<Response, Error> useCaseCallback);
 
     UseCaseCallback<Response, Error> getUseCaseCallback();
+
+    UseCase<Request, Response, Error> handler(UseCaseHandler handler);
+
+    UseCase<Request, Response, Error> execute();
+
+    UseCase<Request, Response, Error> execute(UseCaseHandler handler);
+
+    UseCase<Request, Response, Error> execute(UseCaseHandler handler, Request requestValue);
+
+    UseCase<Request, Response, Error> execute(UseCaseHandler handler, Request requestValue, UseCaseCallback<Response, Error> useCaseCallback);
+
+    /**
+     * Cancel the use case. Callback will never be invoked if have not gotten response.
+     */
+    void cancel();
 
     /**
      * Data received Error.

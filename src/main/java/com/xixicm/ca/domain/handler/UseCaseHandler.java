@@ -46,6 +46,7 @@ public interface UseCaseHandler {
         // original call back
         private final UseCase.UseCaseCallback<Response, Error> mUseCaseCallback;
         private final UseCaseHandler mUseCaseHandler;
+        private boolean isCancelled;
 
         public UseCaseCallbackWrapper(UseCase<Request, Response, Error> useCase,
                                       UseCaseHandler useCaseHandler) {
@@ -63,7 +64,7 @@ public interface UseCaseHandler {
         @Override
         public void onSuccess(Response response) {
             // for case the mUseCase is re-executed, abort previous callback
-            if (mUseCase.getUseCaseCallback() == this) {
+            if (!isCancelled && mUseCase.getUseCaseCallback() == this) {
                 mUseCaseHandler.notifyResponse(response, mUseCaseCallback);
             }
         }
@@ -77,9 +78,16 @@ public interface UseCaseHandler {
         @Override
         public void onError(Error error) {
             // for case the mUseCase is re-executed, abort previous callback
-            if (mUseCase.getUseCaseCallback() == this) {
+            if (!isCancelled && mUseCase.getUseCaseCallback() == this) {
                 mUseCaseHandler.notifyError(error, mUseCaseCallback);
             }
+        }
+
+        /**
+         * cancel the callback
+         */
+        public void cancel() {
+            isCancelled = true;
         }
     }
 }

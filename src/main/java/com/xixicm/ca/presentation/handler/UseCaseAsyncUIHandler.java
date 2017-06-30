@@ -23,8 +23,11 @@ import com.xixicm.ca.presentation.scheduler.UseCaseUIResponseScheduler;
  * Runs the useCase Async and Posts <Response, Error> on UI main thread.
  * For the no call back UseCase, still can use this UseCaseHandler.
  *
+ * Deprecated, using {@link AndroidHandlers} instead
+ *
  * @author mc
  */
+@Deprecated
 public class UseCaseAsyncUIHandler extends DefaultUseCaseHandler {
     private static UseCaseAsyncUIHandler sInstance;
 

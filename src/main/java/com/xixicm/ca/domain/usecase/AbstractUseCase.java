@@ -15,16 +15,37 @@
  */
 package com.xixicm.ca.domain.usecase;
 
+import com.xixicm.ca.domain.handler.Handlers;
+import com.xixicm.ca.domain.handler.UseCaseHandler;
+
 /**
  * @author mc
  */
 public abstract class AbstractUseCase<Request, Response, Error> implements UseCase<Request, Response, Error> {
     private Request mRequestValue;
     private UseCaseCallback<Response, Error> mUseCaseCallback;
+    private UseCaseHandler mUseCaseHandler;
 
+    /**
+     * set the request params.
+     *
+     * @param requestValue
+     * @return
+     */
     @Override
-    public void setRequestValue(Request requestValue) {
+    public AbstractUseCase<Request, Response, Error> setRequestValue(Request requestValue) {
         mRequestValue = requestValue;
+        return this;
+    }
+
+    /**
+     * same as {@link #setRequestValue}.
+     *
+     * @param requestValue
+     * @return
+     */
+    public AbstractUseCase<Request, Response, Error> requestParams(Request requestValue) {
+        return setRequestValue(requestValue);
     }
 
     @Override
@@ -32,13 +53,84 @@ public abstract class AbstractUseCase<Request, Response, Error> implements UseCa
         return mRequestValue;
     }
 
+    /**
+     * Set the callback.
+     *
+     * @param useCaseCallback
+     * @return
+     */
     @Override
-    public void setUseCaseCallback(UseCaseCallback<Response, Error> useCaseCallback) {
+    public AbstractUseCase<Request, Response, Error> setUseCaseCallback(UseCaseCallback<Response, Error> useCaseCallback) {
         mUseCaseCallback = useCaseCallback;
+        return this;
+    }
+
+    /**
+     * same as {@link #setUseCaseCallback}
+     *
+     * @param useCaseCallback
+     * @return
+     */
+    public AbstractUseCase<Request, Response, Error> callback(UseCaseCallback<Response, Error> useCaseCallback) {
+        return setUseCaseCallback(useCaseCallback);
     }
 
     @Override
     public UseCaseCallback<Response, Error> getUseCaseCallback() {
         return mUseCaseCallback;
+    }
+
+    /**
+     * Set the use case handler. If handler is null, using default  {@link Handlers#asyncParallelReqSyncRes}
+     *
+     * @param handler {@link Handlers#asyncSerialReqSyncRes}
+     *                {@link Handlers#asyncParallelReqSyncRes}
+     *                {@link Handlers#asyncParallelReqSyncRes}
+     *                {@link com.xixicm.ca.presentation.handler.AndroidHandlers#asyncParallelReqSyncRes}
+     *                {@link com.xixicm.ca.presentation.handler.AndroidHandlers#asyncSerialReqSyncRes()}
+     * @return
+     */
+    @Override
+    public UseCase<Request, Response, Error> handler(UseCaseHandler handler) {
+        if (handler == null) {
+            handler = Handlers.asyncParallelReqSyncRes();
+        }
+        mUseCaseHandler = handler;
+        return this;
+    }
+
+    @Override
+    public UseCase<Request, Response, Error> execute() {
+        return execute(mUseCaseHandler);
+    }
+
+    @Override
+    public UseCase<Request, Response, Error> execute(UseCaseHandler handler) {
+        return execute(handler, mRequestValue);
+    }
+
+    @Override
+    public UseCase<Request, Response, Error> execute(UseCaseHandler handler, Request requestValue) {
+        return execute(handler, requestValue, mUseCaseCallback);
+    }
+
+    @Override
+    public UseCase<Request, Response, Error> execute(UseCaseHandler handler, Request requestValue, UseCaseCallback<Response, Error> useCaseCallback) {
+        handler(handler);
+        requestParams(requestValue);
+        callback(useCaseCallback);
+        handler.execute(this);
+        return this;
+    }
+
+    /**
+     * Just cancel the callback. For special use case, can do more cancel work.
+     */
+    @Override
+    public void cancel() {
+        UseCaseCallback callback = getUseCaseCallback();
+        if (callback instanceof UseCaseHandler.UseCaseCallbackWrapper) {
+            ((UseCaseHandler.UseCaseCallbackWrapper) callback).cancel();
+        }
     }
 }
