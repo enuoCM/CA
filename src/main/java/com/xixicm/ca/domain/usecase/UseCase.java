@@ -55,6 +55,13 @@ public interface UseCase<Request, Response, Error> extends Runnable, UC {
     void cancel();
 
     /**
+     * Return true if this use case has been cancelled.
+     *
+     * @return true if this use case has been cancelled.
+     */
+    boolean isCancelled();
+
+    /**
      * Data received Error.
      */
     interface ResponseError {

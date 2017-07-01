@@ -15,9 +15,9 @@
  */
 package com.xixicm.ca.domain.handler;
 
-import com.xixicm.ca.domain.usecase.UseCase;
 import com.xixicm.ca.domain.scheduler.UseCaseRequestScheduler;
 import com.xixicm.ca.domain.scheduler.UseCaseResponseScheduler;
+import com.xixicm.ca.domain.usecase.UseCase;
 
 /**
  * Runs {@link UseCase}s using a {@link UseCaseRequestScheduler}.
@@ -46,7 +46,6 @@ public interface UseCaseHandler {
         // original call back
         private final UseCase.UseCaseCallback<Response, Error> mUseCaseCallback;
         private final UseCaseHandler mUseCaseHandler;
-        private boolean isCancelled;
 
         public UseCaseCallbackWrapper(UseCase<Request, Response, Error> useCase,
                                       UseCaseHandler useCaseHandler) {
@@ -64,7 +63,7 @@ public interface UseCaseHandler {
         @Override
         public void onSuccess(Response response) {
             // for case the mUseCase is re-executed, abort previous callback
-            if (!isCancelled && mUseCase.getUseCaseCallback() == this) {
+            if (mUseCase.getUseCaseCallback() == this && !mUseCase.isCancelled()) {
                 mUseCaseHandler.notifyResponse(response, mUseCaseCallback);
             }
         }
@@ -78,16 +77,9 @@ public interface UseCaseHandler {
         @Override
         public void onError(Error error) {
             // for case the mUseCase is re-executed, abort previous callback
-            if (!isCancelled && mUseCase.getUseCaseCallback() == this) {
+            if (mUseCase.getUseCaseCallback() == this && !mUseCase.isCancelled()) {
                 mUseCaseHandler.notifyError(error, mUseCaseCallback);
             }
-        }
-
-        /**
-         * cancel the callback
-         */
-        public void cancel() {
-            isCancelled = true;
         }
     }
 }

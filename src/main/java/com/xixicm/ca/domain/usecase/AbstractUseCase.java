@@ -18,6 +18,8 @@ package com.xixicm.ca.domain.usecase;
 import com.xixicm.ca.domain.handler.Handlers;
 import com.xixicm.ca.domain.handler.UseCaseHandler;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * @author mc
  */
@@ -25,6 +27,7 @@ public abstract class AbstractUseCase<Request, Response, Error> implements UseCa
     private Request mRequestValue;
     private UseCaseCallback<Response, Error> mUseCaseCallback;
     private UseCaseHandler mUseCaseHandler;
+    private AtomicReference<Boolean> mIsCancelled;
 
     /**
      * set the request params.
@@ -124,13 +127,15 @@ public abstract class AbstractUseCase<Request, Response, Error> implements UseCa
     }
 
     /**
-     * Just cancel the callback. For special use case, can do more cancel work.
+     * Just mark as cancelled. For special use case, can do more cancel work.
      */
     @Override
     public void cancel() {
-        UseCaseCallback callback = getUseCaseCallback();
-        if (callback instanceof UseCaseHandler.UseCaseCallbackWrapper) {
-            ((UseCaseHandler.UseCaseCallbackWrapper) callback).cancel();
-        }
+        mIsCancelled.set(Boolean.TRUE);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return mIsCancelled.get();
     }
 }
