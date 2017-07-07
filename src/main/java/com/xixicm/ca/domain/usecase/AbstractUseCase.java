@@ -27,7 +27,7 @@ public abstract class AbstractUseCase<Request, Response, Error> implements UseCa
     private Request mRequestValue;
     private UseCaseCallback<Response, Error> mUseCaseCallback;
     private UseCaseHandler mUseCaseHandler;
-    private AtomicReference<Boolean> mIsCancelled = new AtomicReference<Boolean>();
+    private AtomicReference<Boolean> mIsCancelled = new AtomicReference<Boolean>(false);
 
     /**
      * set the request params.
