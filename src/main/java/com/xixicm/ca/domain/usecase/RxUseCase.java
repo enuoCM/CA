@@ -61,4 +61,21 @@ public interface RxUseCase<Request, Response> extends UC {
      * Cancel the use case. Callback will never be invoked if have not gotten response.
      */
     void cancel();
+
+    /**
+     * Default {@link DisposableObserver} base class.
+     */
+    class DefaultObserver<T> extends DisposableObserver<T> {
+        @Override
+        public void onNext(T t) {
+        }
+
+        @Override
+        public void onComplete() {
+        }
+
+        @Override
+        public void onError(Throwable exception) {
+        }
+    }
 }

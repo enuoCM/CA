@@ -20,7 +20,7 @@ ext {
     siteUrl = 'https://github.com/enuoCM/CA'
     gitUrl = 'https://github.com/enuoCM/CA.git'
 
-    libraryVersion = '1.0.1'
+    libraryVersion = '1.0.2'
 
     developerId = 'mc'
     developerName = 'mc'
