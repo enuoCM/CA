@@ -9,5 +9,5 @@ How to use?
 Import on gradle using:
 
 	dependencies {
-	         compile 'com.xixicm.ca:ca:0.0.2'
+	         compile 'com.xixicm.ca:ca:1.0.2'
 	}
