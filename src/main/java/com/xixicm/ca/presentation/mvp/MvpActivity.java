@@ -76,25 +76,44 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
 
     /**
      * Whether retain {@link #mPresenter} by NonConfigurationInstance.
-     * If return true, should override {@link #getPresenterFromNonConfigurationInstance()} to get {@link #mPresenter}.
+     * If return true, should override {@link #getPresenterFromNonConfigurationInstance()} to get {@link #mPresenter} if need.
      * If return false,  {@link #mPresenter} will be destroyed when this activity {@link #onDestroy}
      *
-     * @return default false
+     * @return default true
      */
     protected boolean isRetainPresenterByNonConfigurationInstance() {
-        return false;
+        return true;
     }
 
     /**
-     * If {@link #isRetainPresenterByNonConfigurationInstance} return true, should override this function to get {@link #mPresenter}.
+     * If {@link #isRetainPresenterByNonConfigurationInstance} return true and {@link #getLastCustomNonConfigurationInstance} doesn't return mPresenter directly,
+     * should override this function to get {@link #mPresenter}.
      *
-     * @return default null
+     * @return {@link #mPresenter} or null
      */
     @Nullable
     protected P getPresenterFromNonConfigurationInstance() {
+        if (mPresenter != null) {
+            // this only happens when getPresenter() is called before MvpActivity#onCreatePresenter
+            return mPresenter;
+        }
+        Object o = getLastCustomNonConfigurationInstance();
+        if (o instanceof MvpPresenter) {
+            //noinspection unchecked
+            return (P) o;
+        }
         return null;
     }
 
+    /**
+     * Default to return the {@link #mPresenter}.
+     *
+     * @return
+     */
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
+        return mPresenter;
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -128,6 +147,7 @@ public abstract class MvpActivity<M, V extends MvpView, P extends MvpPresenter<V
     /**
      * Get {@link #mPresenter}. If mPresenter is null, try to get it from {@link #getPresenterFromNonConfigurationInstance} first,
      * if it's till null, create it by {@link #createPresenter}, otherwise return it directly
+     *
      * @return
      */
     @NonNull
